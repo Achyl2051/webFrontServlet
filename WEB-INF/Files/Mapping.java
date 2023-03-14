@@ -1,26 +1,40 @@
 package etu2051.framework;
 
-public class Mapping {
+public class Mapping
+{
     String className;
     String method;
 
-    public Mapping(){
+    public Mapping()
+    {}
 
+    public Mapping(String className,String method)
+    {
+        setClassName(className);
+        setMethod(method);
     }
-    public void setClassName(String value){
+
+    public void setClassName(String value)
+    {
         if(value!=""){
             this.className=value;
         }
     }
-    public void setMethod(String value){
+
+    public void setMethod(String value)
+    {
         if(value!=""){
             this.method=value;
         }
     }
-    public String getClassName(){
+
+    public String getClassName()
+    {
         return this.className;
     }
-    public String getMethod(){
+
+    public String getMethod()
+    {
         return this.method;
     }
 }
