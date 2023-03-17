@@ -6,8 +6,8 @@
 	<title> FrontServlet </title>
 </head>
 <body>
-	<h1> teste FrontServlet: </h1>
-	<form action="url/FrontServlet" method="GET"> 
+	<h1> Test method for FrontServlet: </h1>
+	<form action="url/Test-insert" method="GET"> 
 		entry 1:<input type="text" name="i1"> </input>
 		<br>
 		<br>
