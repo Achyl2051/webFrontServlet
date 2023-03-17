@@ -5,6 +5,10 @@
                       http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
   version="3.1"
   metadata-complete="true">
+    <context-param>
+      <param-name>package</param-name>
+      <param-value>etu2051.framework.modele</param-value>
+    </context-param>
     <servlet>
       <servlet-name>FrontServlet</servlet-name>
       <servlet-class>etu2051.framework.servlet.FrontServlet</servlet-class>
