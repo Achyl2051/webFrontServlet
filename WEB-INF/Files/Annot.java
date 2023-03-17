@@ -19,6 +19,16 @@ public class Annot {
         }
         return classes;
     }
+    public static List<Class<?>> getClassesWithAnnotation3_1(Class<? extends Annotation> annotation,String pck)throws Exception
+    {
+        List<Class<?>> classes = new ArrayList<>();
+        for (Class<?> cls : getClassesInPackage(pck)) {
+            if (cls.isAnnotationPresent(annotation)) {
+                classes.add(cls);
+            }
+        }
+        return classes;
+    }
     private static List<Class<?>> getClassesInPackage(String packageName) throws ClassNotFoundException, URISyntaxException, IOException {
         List<Class<?>> classes = new ArrayList<>();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

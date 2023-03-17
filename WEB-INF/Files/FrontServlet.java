@@ -13,8 +13,12 @@ import java.util.Map;
 public class FrontServlet extends HttpServlet
 {
     HashMap<String,Mapping> mappingUrl = new HashMap<String, Mapping>();
+    String pck="";
+
     public void init() throws ServletException
     {
+        ServletContext ctxt=getServletContext();
+        this.pck=ctxt.getInitParameter("package");
         try
         {
             loadAnnotation();
@@ -25,7 +29,7 @@ public class FrontServlet extends HttpServlet
 
     public void loadAnnotation()throws Exception
     { 
-        List<Class<?>> controllers = Annot.getClassesWithAnnotation(ClassAnnotation.class);
+        List<Class<?>> controllers = Annot.getClassesWithAnnotation3_1(ClassAnnotation.class,this.pck);
         for(Class<?> ca : controllers)
         {
             Method[] controllerMethods = ca.getMethods();
