@@ -46,7 +46,15 @@ public class FrontServlet extends HttpServlet
         }
     }
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
+    public Object call(String className,String method) throws Exception
+    {
+        Class<?> c=Class.forName(className);
+        Method m=c.getDeclaredMethod(method);
+        Object obj=c.newInstance();
+        return m.invoke(obj);
+    }  
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException, Exception
     {
         response.setContentType("text/plain");
 	    PrintWriter out = response.getWriter();
@@ -65,35 +73,51 @@ public class FrontServlet extends HttpServlet
         }
         catch(Exception e)
         {
-            out.println("Verifier la liste des urls");
+            out.println("L'url n'est pas pris en compte");
         }
-        if (requete!=null)
+        ModelView valiny=(ModelView) call(mappingUrl.get(url).getClassName(),mappingUrl.get(url).getMethod());
+        if(valiny.getClass()==ModelView.class){
+            RequestDispatcher dispat = request.getRequestDispatcher(valiny.getView());
+            dispat.forward(request,response);
+        }
+        else
         {
-            url=url+"?"+requete;
+            if (requete!=null)
+            {
+                url=url+"?"+requete;
+            }
+            out.println(url);    
+            out.println(this.pck);    
         }
-        out.println(url);
-
-        out.println("List :");
-        out.println("---------------------------------------------------------");
-        for(String key : mappingUrl.keySet())
-        {
-            Mapping value=mappingUrl.get(key);
-            out.println("url : "+key);
-            out.println("class name : "+value.getClassName());
-            out.println("method : "+value.getMethod());
-            out.println("---------------------------------------------------------");
-        }
+        // out.println("List :");
+        // out.println("---------------------------------------------------------");
+        // for(String key : mappingUrl.keySet())
+        // {
+        //     Mapping value=mappingUrl.get(key);
+        //     out.println("url : "+key);
+        //     out.println("class name : "+value.getClassName());
+        //     out.println("method : "+value.getMethod());
+        //     out.println("---------------------------------------------------------");
+        // }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 }

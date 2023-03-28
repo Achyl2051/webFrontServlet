@@ -1,5 +1,6 @@
 package etu2051.framework.modele;
 import etu2051.framework.servlet.annotations.*;
+import etu2051.framework.*;
 
 @ClassAnnotation
 public class Another
@@ -37,9 +38,10 @@ public class Another
     }
 
     @UrlAnnotation(url="Another-select")
-    public String select()
+    public ModelView select()
     {
-        String result="The Another selection is a success";
-        return result;
+        // manao izay tokony ataony ilay fonction
+		ModelView modelview=new ModelView("../result.jsp");
+		return modelview;
     }
 }

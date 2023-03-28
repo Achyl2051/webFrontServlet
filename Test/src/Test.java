@@ -1,5 +1,6 @@
 package etu2051.framework.modele;
 import etu2051.framework.servlet.annotations.*;
+import etu2051.framework.*;
 
 @ClassAnnotation
 public class Test
@@ -37,9 +38,10 @@ public class Test
     }
 
     @UrlAnnotation(url="Test-insert")
-    public String insert()
+    public ModelView insert()
     {
-        String result="The test insertion is a success";
-        return result;
+        // manao izay tokony ataony ilay fonction
+		ModelView modelview=new ModelView("../result.jsp");
+		return modelview;
     }
 }
