@@ -78,6 +78,10 @@ public class FrontServlet extends HttpServlet
         ModelView valiny=(ModelView) call(mappingUrl.get(url).getClassName(),mappingUrl.get(url).getMethod());
         if(valiny.getClass()==ModelView.class){
             RequestDispatcher dispat = request.getRequestDispatcher(valiny.getView());
+            for (HashMap.Entry<String,Object> data : valiny.getData().entrySet()) 
+            {
+                request.setAttribute(data.getKey(),data.getValue());
+            }
             dispat.forward(request,response);
         }
         else
