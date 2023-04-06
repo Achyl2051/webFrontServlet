@@ -1,6 +1,7 @@
 package etu2051.framework.modele;
 import etu2051.framework.servlet.annotations.*;
 import etu2051.framework.*;
+import java.util.*;
 
 @ClassAnnotation
 public class Test
@@ -10,6 +11,12 @@ public class Test
 
     public Test()
     {}
+
+    public Test(String input1,String input2)
+    {
+        setInput1(input1);
+        setInput2(input2);
+    }
 
     public void setInput1(String i1)
     {
@@ -41,7 +48,15 @@ public class Test
     public ModelView insert()
     {
         // manao izay tokony ataony ilay fonction
-		ModelView modelview=new ModelView("../result.jsp");
+
+        ArrayList<Test> listTest=new ArrayList<Test>();
+        Test a=new Test("url 1","Tahiry");
+        Test b=new Test("url 2","Johary");
+        listTest.add(a);
+        listTest.add(b);
+		
+        ModelView modelview=new ModelView("../result.jsp");
+        modelview.addItem("listTest",listTest);
 		return modelview;
     }
 }
