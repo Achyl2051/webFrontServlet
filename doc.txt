@@ -1,0 +1,50 @@
+import etu2051.framework.*;
+import etu2051.framework.servlet.annotations.*;
+Annotena @CAnnot ny class rehetra atao
+Exemple: 
+	@CAnnot
+	public class Emp{}
+Forme an'setters sy getters tsy maintsy "setNomAttribut" sy "getNomAttribut"
+exemple:
+	setName(String value){}
+Annotena @UrlAnnot(url="NomDeClass-NomDeMethode") ny methode rehetra, Nom de classe majuscule voloany
+Methode mreturn modelview raha handefa makany amin'vue hafa
+Asiana "../" alohan'nom an'le vue
+Exemple:
+	@UrlAnnot(url="Emp-add")
+	public ModelView add(){
+		ArrayList<Emp> listEmp=new ArrayList<Emp>();
+		Emp a=new Emp(1,"Empun");
+		Emp b=new Emp(2,"Empdeux");
+		listEmp.add(a);
+		listEmp.add(b);
+		ModelView mv=new ModelView("../list.jsp");
+		mv.addItem("listEmp",listEmp);
+		return mv;
+	}
+
+Ao amin'jsp dia action="url/NomDeClasse-NomDeMethode" 
+Misy an'ilay "url/" eo alohany
+input mitovy amin'attribut an'classe ny name
+exemple:
+	<form action="url/Emp-add" method="GET"> 
+	     <input type="text" name="id" required> </input>
+	     <input type="text" name="name" required> </input>
+	     <input type="submit" value="Insert"> </body>
+	</form>
+A ajouter dans web.xml:
+    <context-param>
+      <param-name>package</param-name>
+      <param-value>NomDePackageHijerenaIlayAnnotation</param-value>
+    </context-param>
+    <servlet>
+        <servlet-name>FrontServlet</servlet-name>
+        <servletclass>
+		etu2040.framework.servlet.FrontServlet
+	</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FrontServlet</servlet-name>
+        <url-pattern>/url/*</url-pattern>
+    </servlet-mapping>
+Type de parametre sy attribut object(ex:String,Integer,Double)

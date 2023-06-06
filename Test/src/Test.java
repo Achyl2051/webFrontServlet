@@ -59,4 +59,15 @@ public class Test
         modelview.addItem("listTest",listTest);
 		return modelview;
     }
+
+    @UrlAnnotation(url="Test-save")
+	public void save(){
+		System.out.println("input1: "+this.getInput1());
+		System.out.println("input2: "+this.getInput2());
+	}
+
+    @UrlAnnot(url="Test-print")
+	public void print(String soratra){
+		System.out.println(soratra);
+	}
 }

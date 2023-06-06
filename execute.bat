@@ -1,3 +1,10 @@
+set temporaire=D:\repertoireTravail\dossierTemp
+set test=D:\repertoireTravail\Test
+set framework=D:\repertoireTravail\Framework
+set nomDossier=webFrontServlet
+set tomcat=D:\log\Tomcat_9\webapps
+set jar=framework.jar
+
 mkdir dossierTemp
 cd dossierTemp
 mkdir WEB-INF
@@ -10,18 +17,18 @@ cd ../../
 cd Framework/src
 javac -d ../build/ *.java
 cd ../build
-jar -cfv framework.jar *
+jar -cfv %jar% *
 
-copy D:\repertoireTravail\Framework\build\framework.jar D:\repertoireTravail\dossierTemp\WEB-INF\lib\framework.jar
-del framework.jar
-copy D:\repertoireTravail\Test\src\*.java D:\repertoireTravail\dossierTemp\WEB-INF\files\
-copy D:\repertoireTravail\Test\web\*.jsp D:\repertoireTravail\dossierTemp\
+copy %framework%\build\%jar% %temporaire%\WEB-INF\lib\%jar%
+del %jar%
+copy %test%\src\*.java %temporaire%\WEB-INF\files\
+copy %test%\web\*.jsp %temporaire%\
 
-mkdir D:\log\Tomcat_9\webapps\webFrontServlet
-xcopy D:\repertoireTravail\dossierTemp D:\log\Tomcat_9\webapps\webFrontServlet /e
-copy D:\repertoireTravail\Test\web.xml D:\log\Tomcat_9\webapps\webFrontServlet\WEB-INF\
+mkdir %tomcat%\%nomDossier%
+xcopy %temporaire% %tomcat%\%nomDossier% /e
+copy %test%\web.xml %tomcat%\%nomDossier%\WEB-INF\
 
-javac -d D:\log\Tomcat_9\webapps\webFrontServlet\WEB-INF\classes\ -cp D:\log\Tomcat_9\webapps\webFrontServlet\WEB-INF\lib\framework.jar D:\log\Tomcat_9\webapps\webFrontServlet\WEB-INF\files\*.java
+javac -d %tomcat%\%nomDossier%\WEB-INF\classes\ -cp %tomcat%\%nomDossier%\WEB-INF\lib\%jar% %tomcat%\%nomDossier%\WEB-INF\files\*.java
 
 cd ../../
 rmdir /s dossierTemp
