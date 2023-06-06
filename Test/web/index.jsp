@@ -7,7 +7,7 @@
 </head>
 <body>
 	<h1> Test method for FrontServlet: </h1>
-	<form action="url/Test-insert" method="GET"> 
+	<form action="url/Test-save" method="GET"> 
 		entry 1:<input type="text" name="i1"> </input>
 		<br>
 		<br>
@@ -16,5 +16,6 @@
 		<br>
 		<input type="submit" value="Insert"> </body>
 	</form>
+	<button> <a href="url/Test-print?soratra=mety"> Testena </a> </button>
 </body>
 </html>

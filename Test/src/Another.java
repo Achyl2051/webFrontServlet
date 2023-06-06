@@ -44,4 +44,15 @@ public class Another
 		ModelView modelview=new ModelView("../result.jsp");
 		return modelview;
     }
+
+    @UrlAnnotation(url="Another-save")
+	public void save(){
+		System.out.println("input1: "+this.getInput1());
+		System.out.println("input2: "+this.getInput2());
+	}
+
+    @UrlAnnot(url="Another-print")
+	public void print(String soratra){
+		System.out.println(soratra);
+	}
 }

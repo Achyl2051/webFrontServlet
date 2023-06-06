@@ -6,9 +6,7 @@ import java.util.HashMap;
 import etu2051.framework.*;
 import etu2051.framework.servlet.annotations.*;
 import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FrontServlet extends HttpServlet
 {
@@ -46,63 +44,125 @@ public class FrontServlet extends HttpServlet
         }
     }
 
-    public Object call(String className,String method) throws Exception
+    public Object call(Object obj,String method,String[] attributes,HttpServletRequest request) throws Exception
+    {
+        Class<?> c = obj.getClass();
+        Method m = null;
+        Method[] methods = c.getMethods();
+        for(Method me : methods)
+        {
+            if(me.getName().equalsIgnoreCase(method))
+            {
+                m = me;
+            }
+        }
+        ArrayList<Object> temp=new ArrayList<Object>();
+        Parameter[] param = m.getParameters();
+        for(int i=0;i<param.length;i++)
+        {
+            for(int j=0;j<attributes.length;j++)
+            {
+                Class<?> type = param[i].getType();
+                if(param[i].getName().equalsIgnoreCase("arg"+j))
+                {
+                    temp.add(micast(request.getParameter(attributes[j]),type));
+                }
+            }
+        }
+        if(temp.size()>0)
+        {
+            return m.invoke(obj,(Object[]) temp.toArray());
+        }
+        else
+        {
+            return m.invoke(obj);
+        }
+    }
+
+    public Object allSetters(String className,String[] attributes,HttpServletRequest request) throws Exception
     {
         Class<?> c=Class.forName(className);
-        Method m=c.getDeclaredMethod(method);
         Object obj=c.newInstance();
-        return m.invoke(obj);
-    }  
+        Class<?> cls = obj.getClass();
+        Method[] methods = cls.getMethods();
+        for(String attribute : attributes)
+        {
+            String temp = "set_"+attribute;
+            for(Method method : methods)
+            {
+                if(method.getName().equalsIgnoreCase(temp))
+                {
+                    micast(request.getParameter(attribute),c.getDeclaredField(attribute).getType());
+                    break;
+                }
+            }
+        }
+        return obj;
+    }
+
+    public String[] getViewData(HttpServletRequest request)throws Exception
+    {
+        Map<String, String[]> paramMap = request.getParameterMap();
+        Set<String> paramNames = paramMap.keySet();
+        String[] result = paramNames.toArray(new String[paramNames.size()]);
+        return result;
+    }
+
+    public <T> T micast(String value,Class<T> clazz)throws Exception
+    {
+        Constructor<T> constructor = clazz.getConstructor(String.class);
+        return constructor.newInstance(value);
+    } 
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException, Exception
     {
         response.setContentType("text/plain");
-	    PrintWriter out = response.getWriter();
-        String url=request.getRequestURL().toString();
-        String[] url_=url.split("/");
-        url="";
-        for (int i=5;i<url_.length;i++)
-        {
-            url+=url_[i];
-        }
-        String requete=request.getQueryString();
-        try
-        {
-            out.println("la class: "+mappingUrl.get(url).getClassName());
-            out.println("la method: "+mappingUrl.get(url).getMethod());
-        }
-        catch(Exception e)
-        {
-            out.println("L'url n'est pas pris en compte");
-        }
-        ModelView valiny=(ModelView) call(mappingUrl.get(url).getClassName(),mappingUrl.get(url).getMethod());
-        if(valiny.getClass()==ModelView.class){
-            RequestDispatcher dispat = request.getRequestDispatcher(valiny.getView());
-            for (HashMap.Entry<String,Object> data : valiny.getData().entrySet()) 
+		    PrintWriter out = response.getWriter();
+            String url=request.getRequestURL().toString();
+            String[] url_=url.split("/");
+            url="";
+            for (int i=5;i<url_.length;i++) 
             {
-                request.setAttribute(data.getKey(),data.getValue());
+                url+=url_[i];
             }
-            dispat.forward(request,response);
-        }
-        else
-        {
-            if (requete!=null)
+            String requete=request.getQueryString();
+            if(mappingUrl.containsKey(url))
             {
-                url=url+"?"+requete;
+                try
+                {
+                    out.println("la class: "+mappingUrl.get(url).getClassName());
+                    out.println("la method: "+mappingUrl.get(url).getMethod());
+                    String[] viewdata =  getViewData(request);
+                    Object tempp = allSetters(mappingUrl.get(url).getClassName(),viewdata,request);
+                    Object valiny = call(tempp,mappingUrl.get(url).getMethod(),viewdata,request);
+                    if(valiny!=null)
+                    {
+                        if(valiny.getClass()==ModelView.class)
+                        {
+                            ModelView valiny2 = (ModelView) valiny; 
+                            RequestDispatcher dispat = request.getRequestDispatcher(valiny2.getView());
+                            for (HashMap.Entry<String,Object> data : valiny2.getData().entrySet()) 
+                            {
+                                request.setAttribute(data.getKey(),data.getValue());
+                            }
+                            dispat.forward(request,response);
+                        }
+                        else
+                        {
+                            if (requete!=null) 
+                            {
+                                url=url+"?"+requete;
+                            }
+                            out.println(url);
+                            out.println(this.pck);
+                        }
+                    }
+                }
+                catch(Exception ee)
+                {
+                    ee.printStackTrace(out);
+                }
             }
-            out.println(url);    
-            out.println(this.pck);    
-        }
-        // out.println("List :");
-        // out.println("---------------------------------------------------------");
-        // for(String key : mappingUrl.keySet())
-        // {
-        //     Mapping value=mappingUrl.get(key);
-        //     out.println("url : "+key);
-        //     out.println("class name : "+value.getClassName());
-        //     out.println("method : "+value.getMethod());
-        //     out.println("---------------------------------------------------------");
-        // }
     }
 
     @Override
