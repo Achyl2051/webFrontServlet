@@ -4,7 +4,7 @@ Annotena @CAnnot ny class rehetra atao
 Exemple: 
 	@CAnnot
 	public class Emp{}
-Forme an'setters sy getters tsy maintsy "setNomAttribut" sy "getNomAttribut"
+Forme an'setters sy getters tsy maintsy "set_nomAttribut" sy "get_nomAttribut"
 exemple:
 	setName(String value){}
 Annotena @UrlAnnot(url="NomDeClass-NomDeMethode") ny methode rehetra, Nom de classe majuscule voloany
