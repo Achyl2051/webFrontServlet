@@ -11,7 +11,13 @@ public class Another
     public Another()
     {}
 
-    public void setInput1(String i1)
+    public Another(String input1,String input2)
+    {
+        set_input1(input1);
+        set_input2(input2);
+    }
+
+    public void set_input1(String i1)
     {
         if(i1!="")
         {
@@ -19,7 +25,7 @@ public class Another
         }
     }
 
-    public void setInput2(String i2)
+    public void set_input2(String i2)
     {
         if(i2!="")
         {
@@ -27,12 +33,12 @@ public class Another
         }
     }
 
-    public String getInput1()
+    public String get_input1()
     {
         return this.input1;
     }
 
-    public String getInput2()
+    public String get_input2()
     {
         return this.input2;
     }
@@ -47,11 +53,11 @@ public class Another
 
     @UrlAnnotation(url="Another-save")
 	public void save(){
-		System.out.println("input1: "+this.getInput1());
-		System.out.println("input2: "+this.getInput2());
+		System.out.println("input1: "+this.get_input1());
+		System.out.println("input2: "+this.get_input2());
 	}
 
-    @UrlAnnot(url="Another-print")
+    @UrlAnnotation(url="Another-print")
 	public void print(String soratra){
 		System.out.println(soratra);
 	}

@@ -40,7 +40,7 @@ A ajouter dans web.xml:
     <servlet>
         <servlet-name>FrontServlet</servlet-name>
         <servletclass>
-		etu2040.framework.servlet.FrontServlet
+		etu2051.framework.servlet.FrontServlet
 	</servlet-class>
     </servlet>
     <servlet-mapping>
