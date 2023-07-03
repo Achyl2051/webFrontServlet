@@ -2,12 +2,13 @@ package etu2051.framework.servlet;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import java.util.HashMap;
+
 import etu2051.framework.*;
 import etu2051.framework.servlet.annotations.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+@MultipartConfig
 public class FrontServlet extends HttpServlet
 {
     HashMap<String,Mapping> mappingUrl = new HashMap<String, Mapping>();
@@ -44,7 +45,7 @@ public class FrontServlet extends HttpServlet
         }
     }
 
-    public Object call(Object obj,String method,String[] attributes,HttpServletRequest request) throws Exception
+    public Object eval(Object obj,String method,String[] attributes,HttpServletRequest request) throws Exception
     {
         Class<?> c = obj.getClass();
         Method m = null;
@@ -79,7 +80,7 @@ public class FrontServlet extends HttpServlet
         }
     }
 
-    public Object allSetters(String className,String[] attributes,HttpServletRequest request) throws Exception
+    public Object settena(String className,String[] attributes,HttpServletRequest request) throws Exception
     {
         Class<?> c=Class.forName(className);
         Object obj=c.newInstance();
@@ -114,6 +115,48 @@ public class FrontServlet extends HttpServlet
         return constructor.newInstance(value);
     } 
 
+    public String getFileName(Part part)
+    {
+        String contentDisposition = part.getHeader("content-disposition");
+        String[] parts = contentDisposition.split(";");
+        for (String partValue : parts) {
+            if (partValue.trim().startsWith("filename")) {
+                return partValue.substring(partValue.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return null;
+    }
+
+    public void getFileUpload (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        String uploadPath = "D:/log/Tomcat_9/webapps/webFrontServlet/WEB-INF/uploads";
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+        try {
+            Collection<Part> parts = request.getParts();
+            for (Part part : parts) {
+                if (part.getName().equals("file")) {
+                    String fileName = getFileName(part);
+                    InputStream inputStream = part.getInputStream();
+                    File file = new File(uploadDir, fileName);
+                    OutputStream outputStream = new FileOutputStream(file);
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                    outputStream.close();
+                    inputStream.close();
+                    response.getWriter().println("Le fichier a été uploadé avec succès : " + file.getAbsolutePath());
+                }
+            }
+        } catch (IOException e) {
+            response.getWriter().println("Une erreur s'est produite lors de l'upload du fichier : " + e.getMessage());
+        }
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException, Exception
     {
         response.setContentType("text/plain");
@@ -125,6 +168,11 @@ public class FrontServlet extends HttpServlet
             {
                 url+=url_[i];
             }
+            try {
+                this.getFileUpload(request,response);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
             String requete=request.getQueryString();
             if(mappingUrl.containsKey(url))
             {
@@ -133,8 +181,8 @@ public class FrontServlet extends HttpServlet
                     out.println("la class: "+mappingUrl.get(url).getClassName());
                     out.println("la method: "+mappingUrl.get(url).getMethod());
                     String[] viewdata =  getViewData(request);
-                    Object tempp = allSetters(mappingUrl.get(url).getClassName(),viewdata,request);
-                    Object valiny = call(tempp,mappingUrl.get(url).getMethod(),viewdata,request);
+                    Object tempp = settena(mappingUrl.get(url).getClassName(),viewdata,request);
+                    Object valiny = eval(tempp,mappingUrl.get(url).getMethod(),viewdata,request);
                     if(valiny!=null)
                     {
                         if(valiny.getClass()==ModelView.class)

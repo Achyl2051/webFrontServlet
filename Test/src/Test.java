@@ -14,11 +14,11 @@ public class Test
 
     public Test(String input1,String input2)
     {
-        setInput1(input1);
-        setInput2(input2);
+        set_input1(input1);
+        set_input2(input2);
     }
 
-    public void setInput1(String i1)
+    public void set_input1(String i1)
     {
         if(i1!="")
         {
@@ -26,7 +26,7 @@ public class Test
         }
     }
 
-    public void setInput2(String i2)
+    public void set_input2(String i2)
     {
         if(i2!="")
         {
@@ -34,12 +34,12 @@ public class Test
         }
     }
 
-    public String getInput1()
+    public String get_input1()
     {
         return this.input1;
     }
 
-    public String getInput2()
+    public String get_input2()
     {
         return this.input2;
     }
@@ -62,11 +62,11 @@ public class Test
 
     @UrlAnnotation(url="Test-save")
 	public void save(){
-		System.out.println("input1: "+this.getInput1());
-		System.out.println("input2: "+this.getInput2());
+		System.out.println("input1: "+this.get_input1());
+		System.out.println("input2: "+this.get_input2());
 	}
 
-    @UrlAnnot(url="Test-print")
+    @UrlAnnotation(url="Test-print")
 	public void print(String soratra){
 		System.out.println(soratra);
 	}
